@@ -1,121 +1,90 @@
-import React from "react";
-import {
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Keyboard,
-  ScrollView,
-} from "react-native";
-import Task from "./Task";
-import Camera from "./CameraComponent";
+import React, { useState } from 'react';
+import { View, StyleSheet, ScrollView, useColorScheme, Text } from 'react-native';
+import Constants from 'expo-constants';
+import TodoList from './components/TodoList';
+import AddTodo from './components/AddTodo';
+import { NativeBaseProvider } from "native-base";
+import { StatusBar } from 'expo-status-bar';
+import { Switch, List } from 'react-native-paper';
 
-export default function App() {
-  const [task, setTask] = React.useState();
-  const [taskItems, setTaskItems] = React.useState([]);
+const App = () => {
+  const [todos, setTodos] = useState([]);
 
-  function handleAddTask() {
-    Keyboard.dismiss();
-    setTaskItems([...taskItems, task]);
-    setTask(null);
-  }
+  const handleAddTodo = (newTodo) => {
+    // Generate a unique ID for the new todo item
+    newTodo.id = todos.length + 1;
+    setTodos([...todos, newTodo]);
+  };
 
-  function completeTask(index) {
-    let itemsCopy = [...taskItems];
-    itemsCopy.splice(index, 1);
-    setTaskItems(itemsCopy);
-  }
+  const theme = useColorScheme();
+  const [trueFalseTheme, setTrueFalseTheme] = useState(false)
+
+  const toggleTheme = () => {
+    if (theme === 'dark') {
+      setTrueFalseTheme(!trueFalseTheme);
+    }
+    if (theme === 'light') {
+      setTrueFalseTheme(!trueFalseTheme);
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <Camera />
-      {/* Scroll view to enable scrolling when list gets longer than the page */}
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
-        keyboardShouldPersistTaps="handled"
+    <NativeBaseProvider>
+      <View style={[
+        styles.container,
+        trueFalseTheme
+          ? { backgroundColor: 'black' }
+          : { backgroundColor: 'white' }
+      ]}
       >
-        {/* Today's Tasks */}
-        <View style={styles.tasksWrapper}>
-          <Text style={styles.sectionTitle}>My ToDo List</Text>
-          <View style={styles.items}>
-            {/* This is where the tasks will go! */}
-            {taskItems.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => completeTask(index)}
-                >
-                  <Task text={item} />
-                </TouchableOpacity>
-              );
-            })}
-          </View>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          {/* Render the TodoList component with todos */}
+          <TodoList todos={todos} />
+        </ScrollView>
+        {/* Render the AddTodo component */}
+        <AddTodo onAddTodo={handleAddTodo} trueFalseTheme={trueFalseTheme} />
+        <StatusBar />
+        <View style={styles.switchContainer}>
+          {trueFalseTheme
+            ? <>
+              <List.Icon
+                color='white'
+                icon="weather-sunny" /><Switch value={trueFalseTheme} onValueChange={toggleTheme} /><List.Icon
+                color='white'
+                icon="weather-night" />
+            </>
+            : <>
+              <List.Icon
+                color='black'
+                icon="weather-sunny" /><Switch value={trueFalseTheme} onValueChange={toggleTheme} /><List.Icon
+                color='black'
+                icon="weather-night" />
+            </>
+          }
         </View>
-      </ScrollView>
+      </View>
+    </NativeBaseProvider>
 
-      {/* Write a task */}
-      {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.writeTaskWrapper}
-      >
-        <TextInput
-          style={styles.input}
-          placeholder={"Add new item"}
-          value={task}
-          onChangeText={(text) => setTask(text)}
-        />
-        <TouchableOpacity onPress={() => handleAddTask()}>
-          <View style={styles.addWrapper}>
-            <Text style={styles.addText}>+</Text>
-          </View>
-        </TouchableOpacity>
-        
-      </KeyboardAvoidingView>
-    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E5E5E5",
+    paddingTop: Constants.statusBarHeight,
+    backgroundColor: '#fff',
   },
-  tasksWrapper: {
-    paddingTop: 80,
-    paddingHorizontal: 20,
+  scrollContainer: {
+    flexGrow: 1,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
+  switchContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 1,
   },
-  items: {
-    marginTop: 30,
-  },
-  writeTaskWrapper: {
-    position: "absolute",
-    bottom: 60,
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  input: {
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    backgroundColor: "#FFF",
-    width: 250,
-  },
-  addWrapper: {
-    width: 60,
-    height: 60,
-    backgroundColor: "#FFF",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  addText: {},
 });
+
+export default App;
