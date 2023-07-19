@@ -6,9 +6,10 @@ import TodoItem from '../TodoItem/index';
 const TodoList = ({ todos }) => {
   return (
     <FlatList
+      scrollEnabled={false}
       data={todos}
       keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => <TodoItem style={styles.item} title={item.title} imageUri={item.imageUri} />}
+      renderItem={({ item }) => <TodoItem style={styles.item} title={item.title} imageUri={item.imageUri} scrollEnabled={false}/>}
     />
   );
 };

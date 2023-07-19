@@ -15,7 +15,6 @@
 ### Links and Resources
 
 - [GitHub Actions ci/cd](https://github.com/ikesteoger/401d53-Lab43/actions)
-- [ToDo List Tutorial](https://dev.to/codesphere/building-your-first-react-native-application-with-expo-5381)
 <!-- - [back-end server url](http://xyz.com) (when applicable) -->
 <!-- - [front-end application]() -->
 
@@ -24,7 +23,6 @@
 Ryan Gallaway  
 Ryan Eastman  
 ChatGPT  
-Simon Pfeiffer of Codesphere Inc.
 
 ### Setup
 
@@ -34,11 +32,16 @@ For now I have none and do not require one -->
 
 #### How to initialize/run your application
 
-- Run `npm i` and then `npx expo start`
+- Clone repo down, run `npm i`, and then `npx expo start`.
+- Scan the QR code with your phone through camera app with ios or expo go app with android.
+- Enjoy!
 
 <!--- #### How to use your library (where applicable) --->
 
 #### Features / Routes
+
+- Hold a List of ToDos that are able to hold text and/or images
+- Image can either be taken with a camera or added via gallery
 
 <!-- - GET : `/hello` - specific route to hit -->
 
@@ -46,7 +49,7 @@ For now I have none and do not require one -->
 
 <!-- - Run `npm test` to see tests running. -->
 
-- Currently no tests written - stretch goal.
+- Currently no tests written.
 
 #### UML
 
